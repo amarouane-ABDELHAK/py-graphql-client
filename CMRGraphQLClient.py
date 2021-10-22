@@ -8,7 +8,7 @@ from json import dumps
 load_dotenv()
 
 
-class GenerateExecuteQuery:
+class CMRGraphQLServicet:
 
     def __init__(self, service, fields, **kwargs) -> None:
         params = []
@@ -32,6 +32,7 @@ class GenerateExecuteQuery:
 
     def append_service(self, service):
         self.query += service.get_query()
+        print(self.query)
 
     def generate_query(self):
         return """
@@ -46,7 +47,7 @@ class GenerateExecuteQuery:
         :type pretty: Boolean
         """
         gql_query = self.generate_query()
-        graphql_host = getenv('GraphQL_Host', 'http://localhost:9100/graphql')
+        graphql_host = getenv('GraphQL_Host', 'https://graphql.earthdata.nasa.gov/api')
         # Select your transport with a defined url endpoint
         transport = RequestsHTTPTransport(
             url=graphql_host,
@@ -94,30 +95,46 @@ class GenerateExecuteQuery:
                 "error": ""
             }
 
-    def download_granules(self, dest_path):
+    def download_granules(self,collection_concept_id, dest_path, url_type="Get Data", protocol="http"):
         """
         Download the queried granules
         :return:
         :rtype:
         """
-        result_returned = self.execute_query()
 
-        granules = result_returned.get('collection').get('granules')
-        username, password = getenv('USERNAME'), getenv('PASSWORD')
-        for gran in granules:
-            granule_link = gran['download_link']
-            print(f'Downloading {path.basename(granule_link)} to {dest_path}')
-            self.get_cmr_file(granule_link, username=username, password=password,
-                              destination=dest_path)
+        granules = self("granules",offset=0, fields=["count"])
+        granules_items = self("items", fields=["relatedUrls"])
+        granules.append_service(granules_items)
+        re = granules.execute_query()
+        print(re)
+
+        # granules = result_returned.get('collection').get('granules')
+        # username, password = getenv('USERNAME'), getenv('PASSWORD')
+        # for gran in granules:
+        #     granule_link = gran['download_link']
+        #     print(f'Downloading {path.basename(granule_link)} to {dest_path}')
+        #     self.get_cmr_file(granule_link, username=username, password=password,
+        #                       destination=dest_path)
 
 
 if __name__ == "__main__":
-    collection = GenerateExecuteQuery("collection", conceptId="C1976712047-GHRC_DAAC",
-                                      fields=["processingLevel", "shortName", "spatialExtent"])
-    # granule = GenerateExecuteQuery("granules", page_size="5", fields=["download_link"])
-    # plt = GenerateExecuteQuery("Platforms", fields=["ShortName"])
-    # collection.append_service(granule)
-    # collection.append_service(plt)
-    query_result = collection.execute_query(pretty=True)
-    print(query_result)
-    #collection.download_granules(dest_path="/tmp/dest")
+
+    collections = CMRGraphQLServicet("collections", shortName="olsana", fields=[])
+    CMRGraphQLServicet().download_granules(collection_concept_id="C1976712047-GHRC_DAAC", dest_path="")
+    # collection_items = CMRGraphQLServicet("items", fields=[])
+    # granules = CMRGraphQLServicet("granules", offset=62,fields=["count"])
+    # granles_item = CMRGraphQLServicet("items",  fields=["granuleUr", "relatedUrls"])
+    # granules.append_service(granles_item)
+    # collection_items.append_service(granules)
+    # collections.append_service(collection_items)
+    # result = collections.execute_query(pretty=True)
+    # print(result)
+
+
+    # # granule = GenerateExecuteQuery("granules", page_size="5", fields=["download_link"])
+    # # plt = GenerateExecuteQuery("Platforms", fields=["ShortName"])
+    # # collection.append_service(granule)
+    # # collection.append_service(plt)
+    # query_result = collection.execute_query(pretty=True)
+    # print(query_result)
+    # #collection.download_granules(dest_path="/tmp/dest")
