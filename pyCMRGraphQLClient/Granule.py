@@ -7,8 +7,8 @@ class Granule(BaseClassClient):
     """
     Query for a granule using GraphQL
     """
-    def __init__(self, service="granule", **kwargs):
-        super().__init__(service=service, **kwargs)
+    def __init__(self, fields,service="granule", **kwargs):
+        super().__init__(service=service,fields=fields, **kwargs)
 
 
     def get_download_link(self, links, esipfed_link ="http://esipfed.org/ns/fedsearch/1.1/data#"):
