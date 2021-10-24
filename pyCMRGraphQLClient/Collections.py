@@ -1,5 +1,5 @@
-from BaseClassClient import BaseClassClient
-import CMRHelpers
+from .BaseClassClient import BaseClassClient
+from .CMRHelpers import get_download_link, get_cmr_file
 
 class Collections(BaseClassClient):
     """
@@ -15,9 +15,9 @@ class Collections(BaseClassClient):
     def append_service(self, subservice):
         self.items.query += subservice.get_query()
         self.query += self.items.get_query()
-    
 
-    
+
+
     def download_granules(self, destination="/tmp"):
         """
         Download the queried granules
@@ -27,16 +27,16 @@ class Collections(BaseClassClient):
 
         results = self.execute_query()
         coll_items = results['collections']['items']
-        
+
         for coll_item in coll_items:
             for item in coll_item['granules']['items']:
                 links = item['links']
-                hrefs = CMRHelpers.get_download_link(links)
+                hrefs = get_download_link(links)
                 urls = [href['href'] for href in hrefs]
-                CMRHelpers.get_cmr_file(urls=urls, destination=destination)
+                get_cmr_file(urls=urls, destination=destination)
 
 
-        
+
 
 if __name__ == "__main__":
     from Granules import Granules

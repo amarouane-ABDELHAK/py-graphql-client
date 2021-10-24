@@ -1,4 +1,4 @@
-from BaseClassClient import BaseClassClient
+from .BaseClassClient import BaseClassClient
 
 class Services(BaseClassClient):
     """

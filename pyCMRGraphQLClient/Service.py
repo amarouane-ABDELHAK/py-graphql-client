@@ -1,5 +1,5 @@
-from BaseClassClient import BaseClassClient
-import CMRHelpers
+from .BaseClassClient import BaseClassClient
+from .CMRHelpers import get_download_link, get_cmr_file
 
 class Service(BaseClassClient):
     """
@@ -8,7 +8,7 @@ class Service(BaseClassClient):
     def __init__(self, fields,conceptId, service="service"):
         self.conceptId = conceptId
         super().__init__(service=service,fields=fields,conceptId=self.conceptId)
-    
+
     def download_granules(self, destination="/tmp"):
         """
         Download the queried granules
@@ -17,13 +17,13 @@ class Service(BaseClassClient):
         """
 
         results = self.execute_query()
-        coll_items = results['service']['collections']['items']         
+        coll_items = results['service']['collections']['items']
         for coll_item in coll_items:
             for item in coll_item['granules']['items']:
                 links = item['links']
-                hrefs = CMRHelpers.get_download_link(links)
+                hrefs = get_download_link(links)
                 urls = [href['href'] for href in hrefs]
-                CMRHelpers.get_cmr_file(urls=urls, destination=destination) 
+                get_cmr_file(urls=urls, destination=destination)
 
 
 
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     from Collections import Collections
     from Granules import Granules
     service = Service(fields=["description","longName"], conceptId="S1993846778-SCIOPS")
-    collections = Collections(fields=["shortName"]) 
+    collections = Collections(fields=["shortName"])
     granules = Granules(fields=["granuleUr", "links"], limit=1)
     collections.append_service(granules)
     service.append_service(collections)

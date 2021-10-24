@@ -1,5 +1,5 @@
-from BaseClassClient import BaseClassClient
-import CMRHelpers
+from .BaseClassClient import BaseClassClient
+from .CMRHelpers import get_download_link, get_cmr_file
 
 class Granule(BaseClassClient):
     """
@@ -7,8 +7,6 @@ class Granule(BaseClassClient):
     """
     def __init__(self, fields,service="granule", **kwargs):
         super().__init__(service=service,fields=fields, **kwargs)
-
-
 
     def download_granule(self, destination="/tmp"):
         """
@@ -20,7 +18,7 @@ class Granule(BaseClassClient):
 
         a = self.execute_query()
         links = a['granule']['links']
-        hrefs = CMRHelpers.get_download_link(links)
+        hrefs = get_download_link(links)
         urls = [href['href'] for href in hrefs]
         print(urls)
-        CMRHelpers.get_cmr_file(urls=urls, destination=destination)
+        get_cmr_file(urls=urls, destination=destination)

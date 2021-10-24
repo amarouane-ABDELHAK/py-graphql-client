@@ -1,6 +1,6 @@
 from Granule import Granule
-from BaseClassClient import BaseClassClient
-import CMRHelpers
+from .BaseClassClient import BaseClassClient
+from .CMRHelpers import get_download_link, get_cmr_file
 
 class Granules(Granule):
     """
@@ -25,6 +25,6 @@ class Granules(Granule):
         items = result['granules']['items']
         for item in items:
             links = item['links']
-            hrefs = CMRHelpers.get_download_link(links)
+            hrefs = get_download_link(links)
             urls = [href['href'] for href in hrefs]
-            CMRHelpers.get_cmr_file(urls=urls, destination=destination)
+            get_cmr_file(urls=urls, destination=destination)
