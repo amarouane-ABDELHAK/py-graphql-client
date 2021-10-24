@@ -1,6 +1,6 @@
 from Granule import Granule
 from BaseClassClient import BaseClassClient
-
+import CMRHelpers
 
 class Granules(Granule):
     """
@@ -8,18 +8,12 @@ class Granules(Granule):
     """
     def __init__(self, service="granules", **kwargs):
 
-        fields = kwargs.pop('fields', [])
-        granules_fields = []
-        for ele in ['count', 'cursor']:
-            if ele in fields:
-                granules_fields.append(ele)
-                fields.remove(ele)
-
+        granules_fields, fields, kwargs = self.sanitize_fields(list_of_items=["count", "cursor"], **kwargs)
         super().__init__(service=service,fields=granules_fields, **kwargs)
         items = BaseClassClient(service="items", fields=fields)
         self.append_service(items)
 
-    def download_granule(self, destination="/tmp"):
+    def download_granules(self, destination="/tmp"):
         """
         Download the queried granules
         :return:
@@ -31,8 +25,6 @@ class Granules(Granule):
         items = result['granules']['items']
         for item in items:
             links = item['links']
-            hrefs = self.get_download_link(links)
+            hrefs = CMRHelpers.get_download_link(links)
             urls = [href['href'] for href in hrefs]
-            self.get_cmr_file(urls=urls, destination=destination)
-
-        
+            CMRHelpers.get_cmr_file(urls=urls, destination=destination)

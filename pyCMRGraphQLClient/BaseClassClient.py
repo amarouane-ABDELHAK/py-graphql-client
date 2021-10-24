@@ -37,6 +37,16 @@ class BaseClassClient(ABC):
         %s%s{
         %s
         """ % (service, passed_params, '\n'.join(fields))
+    
+    def sanitize_fields(self,list_of_items=[], **kwargs):
+        """.env.example"""
+        fields = kwargs.pop('fields', [])
+        service_fields = []
+        for ele in list_of_items:
+            if ele in fields:
+                service_fields.append(ele)
+                fields.remove(ele)
+        return [service_fields, fields, kwargs]
 
     def get_query(self) -> str:
         """
@@ -57,6 +67,7 @@ class BaseClassClient(ABC):
         :return: None
         :rtype: None
         """
+        
         self.query += service.get_query()
 
     def generate_query(self):
