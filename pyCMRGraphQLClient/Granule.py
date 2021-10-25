@@ -20,5 +20,4 @@ class Granule(BaseClassClient):
         links = a['granule']['links']
         hrefs = get_download_link(links)
         urls = [href['href'] for href in hrefs]
-        print(urls)
         get_cmr_file(urls=urls, destination=destination)
