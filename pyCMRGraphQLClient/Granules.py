@@ -1,6 +1,6 @@
 from .Granule import Granule
 from .BaseClassClient import BaseClassClient
-from .CMRHelpers import get_download_link, get_cmr_file
+from .CMRHelpers import get_download_link, get_cmr_file, get_urs_username_password
 
 class Granules(Granule):
     """
@@ -23,8 +23,9 @@ class Granules(Granule):
         self.append_service(items)
         result = self.execute_query()
         items = result['granules']['items']
+        username, password = get_urs_username_password()
         for item in items:
             links = item['links']
             hrefs = get_download_link(links)
             urls = [href['href'] for href in hrefs]
-            get_cmr_file(urls=urls, destination=destination)
+            get_cmr_file(urls=urls,username=username, password=password, destination=destination)

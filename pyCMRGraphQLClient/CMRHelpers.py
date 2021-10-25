@@ -12,8 +12,15 @@ def get_download_link(links, esipfed_link ="http://esipfed.org/ns/fedsearch/1.1/
     """
     return [ele for ele in links if ele['rel'] == esipfed_link and not ele.get('inherited')]
 
+    
+def get_urs_username_password():
+    """Get URS username and Password"""
 
-def get_cmr_file(urls, destination="/tmp/"):
+    username = os.environ.get('URS_USERNAME') if os.environ.get('URS_USERNAME') else input ("Enter URS username :")
+    password = os.environ.get('URS_PASSWORD') if os.environ.get('URS_PASSWORD') else getpass.getpass(prompt="Enter URS password :")
+    return [username, password]
+
+def get_cmr_file(urls,username, password, destination="/tmp/"):
     """
 
     :param urls:
@@ -23,8 +30,7 @@ def get_cmr_file(urls, destination="/tmp/"):
     :return:
     :rtype:
     """
-    username = os.environ.get('URS_USERNAME') if os.environ.get('URS_USERNAME') else input ("Enter URS username :")
-    password = os.environ.get('URS_PASSWORD') if os.environ.get('URS_PASSWORD') else getpass.getpass(prompt="Enter URS password :")
+
     os.makedirs(destination) if not os.path.exists(destination) else ""
     number_of_granules = len(urls)
     errors = []

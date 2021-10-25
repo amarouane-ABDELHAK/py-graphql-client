@@ -1,5 +1,5 @@
 from .BaseClassClient import BaseClassClient
-from .CMRHelpers import get_download_link, get_cmr_file
+from .CMRHelpers import get_download_link, get_cmr_file, get_urs_username_password
 
 class Granule(BaseClassClient):
     """
@@ -20,4 +20,5 @@ class Granule(BaseClassClient):
         links = a['granule']['links']
         hrefs = get_download_link(links)
         urls = [href['href'] for href in hrefs]
-        get_cmr_file(urls=urls, destination=destination)
+        username, password = get_urs_username_password()
+        get_cmr_file(urls=urls,username=username, password=password, destination=destination)

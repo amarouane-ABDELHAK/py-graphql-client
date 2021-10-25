@@ -1,5 +1,5 @@
 from .BaseClassClient import BaseClassClient
-from .CMRHelpers import get_download_link, get_cmr_file
+from .CMRHelpers import get_download_link, get_cmr_file, get_urs_username_password
 
 class Service(BaseClassClient):
     """
@@ -18,12 +18,13 @@ class Service(BaseClassClient):
 
         results = self.execute_query()
         coll_items = results['service']['collections']['items']
+        username, password = get_urs_username_password()
         for coll_item in coll_items:
             for item in coll_item['granules']['items']:
                 links = item['links']
                 hrefs = get_download_link(links)
                 urls = [href['href'] for href in hrefs]
-                get_cmr_file(urls=urls, destination=destination)
+                get_cmr_file(urls=urls,username=username, password=password, destination=destination)
 
 
 
