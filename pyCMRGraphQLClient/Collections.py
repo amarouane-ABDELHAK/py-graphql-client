@@ -16,7 +16,7 @@ class Collections(BaseClassClient):
 
     def append_service(self, subservice):
         if not self.items:
-            self.items = BaseClassClient(service="items", fields=fields)
+            self.items = BaseClassClient(service="items", fields=[])
             self.query += self.items.get_query()
         self.items.query += subservice.get_query()
         self.query += self.items.get_query()
