@@ -1,4 +1,4 @@
-from Granule import Granule
+from .Granule import Granule
 from .BaseClassClient import BaseClassClient
 from .CMRHelpers import get_download_link, get_cmr_file
 
