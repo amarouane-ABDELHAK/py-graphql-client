@@ -27,8 +27,10 @@ class BaseClassClient(ABC):
         """
         params = []
         for k, v in kwargs.items():
+            if isinstance(v, bool):
+                v = str(v).lower()
             try:
-                v = int(v) if not isinstance(v, bool) else v
+                v = int(v)
             except:
                 v = f'"{v}"'
             params.append(f'{k}: {v}')
