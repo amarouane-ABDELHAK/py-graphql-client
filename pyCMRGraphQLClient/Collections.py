@@ -8,6 +8,7 @@ class Collections(BaseClassClient):
     def __init__(self, service="collections", **kwargs):
         collections_fields, fields, kwargs = self.sanitize_fields(list_of_items=["count", "cursor", "facets"], **kwargs)
         super().__init__(service=service,fields=collections_fields, **kwargs)
+        self.items = None
         if fields:
             self.items = BaseClassClient(service="items", fields=fields)
             self.query += self.items.get_query()
