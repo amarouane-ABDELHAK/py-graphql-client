@@ -29,10 +29,11 @@ class BaseClassClient(ABC):
         for k, v in kwargs.items():
             if isinstance(v, bool):
                 v = str(v).lower()
-            try:
-                v = int(v)
-            except:
-                v = f'"{v}"'
+            else:
+                try:
+                    v = int(v)
+                except:
+                    v = f'"{v}"'
             params.append(f'{k}: {v}')
         passed_params = f"({','.join(params)})" if params else ""
         self.query = """
